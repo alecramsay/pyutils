@@ -5,6 +5,7 @@ READ/WRITE ROUTINES
 """
 
 import os
+import sys
 from csv import DictReader, DictWriter
 import pickle
 import json
@@ -21,7 +22,8 @@ from shapely.geometry import (
     GeometryCollection,
 )
 import fiona
-from typing import Any, Optional
+import contextlib
+from typing import Any, Optional, Generator, TextIO
 
 
 ### FILE NAMES & PATHS ###
@@ -197,6 +199,28 @@ def read_pickle(rel_path) -> Any:
     except Exception as e:
         print("Exception unpickling: ", e)
         return None
+
+
+### SMART OPEN ###
+
+
+@contextlib.contextmanager
+def smart_open(filename=None) -> Generator[TextIO | TextIO, None, None]:
+    """Write to a file or stdout.
+
+    Patterned after: https://stackoverflow.com/questions/17602878/how-to-handle-both-with-open-and-sys-stdout-nicely
+    """
+
+    if filename and filename != "-":
+        fh: TextIO = open(filename, "w")
+    else:
+        fh = sys.stdout
+
+    try:
+        yield fh
+    finally:
+        if fh is not sys.stdout:
+            fh.close()
 
 
 # DON'T LIMIT WHAT GETS EXPORTED.
