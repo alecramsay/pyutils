@@ -9,13 +9,13 @@ from pytest import approx
 from typing import Any
 
 
-def roughly_equal(x: float, y: float) -> bool:
+def approx_equal(x: float, y: float) -> bool:
     """Check if two floats are approximately equal"""
 
     return x == approx(y)
 
 
-def dict_approx(actual: dict, expected: dict) -> bool:
+def dict_approx_equal(actual: dict, expected: dict) -> bool:
     """Check if two dictionaries are approximately equal"""
 
     for key in expected:
@@ -26,8 +26,9 @@ def dict_approx(actual: dict, expected: dict) -> bool:
         e: Any = expected[key]
 
         if type(e) == float:
-            if a != approx(e):
-                return False
+            return approx_equal(a, e)
+            # if a != approx(e):
+            #     return False
         else:
             if a != e:
                 return False
