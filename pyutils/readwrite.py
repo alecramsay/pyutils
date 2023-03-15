@@ -65,7 +65,8 @@ def path_to_file(parts: list[str], naked: bool = False) -> str:
 ### CSV ###
 
 
-def read_typed_csv(rel_path, field_types) -> list:
+# TODO
+def read_csv(rel_path: str, types: Optional[list] = None) -> list[dict]:
     """Read a CSV with DictReader. Return a list of dicts.
 
     Patterned after: https://stackoverflow.com/questions/8748398/python-csv-dictreader-type
@@ -79,19 +80,18 @@ def read_typed_csv(rel_path, field_types) -> list:
             reader: DictReader[str] = DictReader(
                 file, fieldnames=None, restkey=None, restval=None, dialect="excel"
             )
+            fieldnames: list[str] = list(reader.fieldnames) if reader.fieldnames else []
+            field_types: list[Any] = types if types else [str] * len(fieldnames)
+            for t in field_types:
+                assert t in [str, int, float]
 
             for row_in in reader:
-                fieldnames: list[str] = (
-                    list(reader.fieldnames) if reader.fieldnames else []
-                )
                 if len(field_types) >= len(fieldnames):
                     # Extract the values in the same order as the csv header
                     ivalues: map[str | Any | None] = map(row_in.get, fieldnames)
 
                     # Apply type conversions
-                    iconverted: list = [
-                        cast(x, y) for (x, y) in zip(field_types, ivalues)
-                    ]
+                    iconverted: list = [x(y) for (x, y) in zip(field_types, ivalues)]
 
                     # Pass the field names and the converted values to the dict constructor
                     row_out: dict = dict(zip(fieldnames, iconverted))
@@ -102,12 +102,6 @@ def read_typed_csv(rel_path, field_types) -> list:
 
     except:
         raise Exception("Exception reading CSV with explicit types.")
-
-
-def cast(t, v_str) -> str | int | float:
-    """Cast a string to a specified type."""
-
-    return t(v_str)
 
 
 def write_csv(rel_path, rows, cols, *, precision="{:.6f}", header=True) -> None:
@@ -140,19 +134,32 @@ def write_csv(rel_path, rows, cols, *, precision="{:.6f}", header=True) -> None:
 def read_json(rel_path) -> dict[str, Any]:
     """Load a JSON file into a dictionary."""
 
-    abs_path: str = FileSpec(rel_path).abs_path
+    try:
+        abs_path: str = FileSpec(rel_path).abs_path
 
-    with open(abs_path, "r") as f:
-        return json.load(f)
+        with open(abs_path, "r") as f:
+            return json.load(f)
+
+    except:
+        raise Exception("Exception reading JSON.")
 
 
-# TODO - write_json
+def write_json(rel_path, data) -> None:
+    """Write a JSON file from a dictionary."""
+
+    try:
+        abs_path: str = FileSpec(rel_path).abs_path
+
+        with open(abs_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+    except:
+        raise Exception("Exception writing JSON.")
 
 
 ### LOAD A SHAPEFILE ###
 
 
-def load_shapes(shp_file: str, id: str) -> tuple[dict, Optional[dict[str, Any]]]:
+def read_shapes(shp_file: str, id: str) -> tuple[dict, Optional[dict[str, Any]]]:
     """Load a shapefile into a dictionary of shapes keyed by the value of the specified field."""
 
     shp_path: str = os.path.expanduser(shp_file)
