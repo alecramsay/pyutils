@@ -64,5 +64,17 @@ class TestReadWrite:
         except:
             assert False
 
+    def test_shapes(self) -> None:
+        try:
+            rel_path: str = path_to_file([files_dir]) + file_name(
+                ["tl_2020", "37", "state20"], "_"
+            )
+            shapes: tuple[dict, Optional[dict[str, Any]]] = read_shapes(
+                rel_path, "GEOID20"
+            )
+            assert len(shapes[0]) == 1
+        except:
+            assert False
+
 
 ### END ###
