@@ -15,7 +15,7 @@ def approx_equal(x: float, y: float) -> bool:
     return x == approx(y)
 
 
-def dict_approx_equal(actual: dict, expected: dict) -> bool:
+def dict_approx_equal(actual: dict, expected: dict, int_threshold: int = 0) -> bool:
     """Check if two dictionaries are approximately equal"""
 
     for key in expected:
@@ -25,35 +25,15 @@ def dict_approx_equal(actual: dict, expected: dict) -> bool:
         a: Any = actual[key]
         e: Any = expected[key]
 
-        if type(e) == float:
-            return approx_equal(a, e)
-            # if a != approx(e):
-            #     return False
+        if type(a) == float and type(e) == float:
+            if not approx_equal(a, e):
+                return False
+        elif type(a) == int and type(e) == int:
+            # int_threshold = 1 to allow for rounding differences
+            if abs(a - e) > int_threshold:
+                return False
         else:
             if a != e:
-                return False
-
-    return True
-
-
-def dict_close(actual: dict, expected: dict, threshold: int = 1) -> bool:
-    """Close but not necessarily equal"""
-
-    for key in expected:
-        if key not in actual:
-            return False
-
-        if type(expected[key]) == str:
-            if actual[key] != expected[key]:
-                return False
-
-        if type(expected[key]) == int:
-            # Allow for rounding differences
-            if abs(actual[key] - expected[key]) > threshold:
-                return False
-
-        if type(expected[key]) == float:
-            if actual[key] != approx(expected[key]):
                 return False
 
     return True

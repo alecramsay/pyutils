@@ -20,5 +20,8 @@ class TestEqual:
         d2 = {"A": "1", "B": 2, "C": 3.2}
         assert not dict_approx_equal(d1, d2)
 
+        d2 = {"A": "1", "B": 3, "C": 3.14}
+        assert dict_approx_equal(d1, d2, int_threshold=1)
+
 
 ### END ###
