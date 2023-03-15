@@ -3,4 +3,4 @@
 from .constants import *
 from .readwrite import *
 from .timers import *
-from .misc import *
+from .equal import *
