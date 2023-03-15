@@ -1,3 +1,17 @@
+## My customizations
+# VS Code project file
+.vscode/
+
+# Misc test, temp, and housekeeping files
+sandbox.py
+TODO.md
+temp/
+logs/
+intermediate/
+wip/
+
+## End my customizations
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
