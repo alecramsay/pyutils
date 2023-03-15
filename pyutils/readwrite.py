@@ -66,7 +66,7 @@ def path_to_file(parts: list[str], naked: bool = False) -> str:
 
 
 def read_typed_csv(rel_path, field_types) -> list:
-    """Read a CSV with DictReader
+    """Read a CSV with DictReader. Return a list of dicts.
 
     Patterned after: https://stackoverflow.com/questions/8748398/python-csv-dictreader-type
     """
@@ -111,7 +111,7 @@ def cast(t, v_str) -> str | int | float:
 
 
 def write_csv(rel_path, rows, cols, *, precision="{:.6f}", header=True) -> None:
-    """Write a CSV file"""
+    """Write a CSV file from a list of dicts."""
 
     try:
         abs_path: str = FileSpec(rel_path).abs_path
@@ -137,13 +137,16 @@ def write_csv(rel_path, rows, cols, *, precision="{:.6f}", header=True) -> None:
 ### JSON ###
 
 
-def load_json(rel_path) -> dict[str, Any]:
+def read_json(rel_path) -> dict[str, Any]:
     """Load a JSON file into a dictionary."""
 
     abs_path: str = FileSpec(rel_path).abs_path
 
     with open(abs_path, "r") as f:
         return json.load(f)
+
+
+# TODO - write_json
 
 
 ### LOAD A SHAPEFILE ###
