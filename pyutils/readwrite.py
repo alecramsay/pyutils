@@ -65,7 +65,6 @@ def path_to_file(parts: list[str], naked: bool = False) -> str:
 ### CSV ###
 
 
-# TODO
 def read_csv(rel_path: str, types: Optional[list] = None) -> list[dict]:
     """Read a CSV with DictReader. Return a list of dicts.
 
