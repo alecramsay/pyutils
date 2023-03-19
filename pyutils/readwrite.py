@@ -115,7 +115,7 @@ def write_csv(rel_path, rows, cols, *, precision="{:.6f}", header=True) -> None:
                 writer.writeheader()
 
             for row in rows:
-                mod: dict = {}
+                mod: dict = dict()
                 for k, v in row.items():
                     if isinstance(v, float):
                         mod[k] = precision.format(v)
