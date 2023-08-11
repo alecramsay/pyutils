@@ -39,7 +39,8 @@ class FileSpec:
 
         self.rel_path: str = path
         self.abs_path: str = os.path.abspath(path)
-        self.name: str = name.lower() if (name) else os.path.basename(file_name).lower()
+        self.name: str = name.lower() if (name) else os.path.basename(file_name)
+        # self.name: str = name.lower() if (name) else os.path.basename(file_name).lower() # TODO: Why did I do this?
         self.extension: str = file_extension
 
 
