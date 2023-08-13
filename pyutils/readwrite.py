@@ -6,7 +6,7 @@ READ/WRITE ROUTINES
 
 import os
 import sys
-from csv import DictReader, DictWriter
+from csv import DictReader, DictWriter, QUOTE_NONE
 import pickle
 import json
 from collections import defaultdict
@@ -111,7 +111,9 @@ def write_csv(rel_path, rows, cols, *, precision="{:.6f}", header=True) -> None:
         abs_path: str = FileSpec(rel_path).abs_path
 
         with open(abs_path, "w") as f:
-            writer: DictWriter = DictWriter(f, fieldnames=cols)
+            writer: DictWriter = DictWriter(
+                f, fieldnames=cols, quoting=QUOTE_NONE, escapechar="", quotechar=""
+            )
             if header:
                 writer.writeheader()
 
